@@ -1,4 +1,5 @@
 from jellyfish import levenshtein_distance
+import datetime
 
 correct_list = []
 misspell_list = []
@@ -18,23 +19,35 @@ with open ('dictionary.txt') as file:
 
 result = []
 
-for mis in misspell_list:
-    min = len(mis)
-    min_index = 0
-    for index, dic in enumerate(dictionary_list):
+for mis_index, mis in enumerate(misspell_list):
+    
+    result.append([])
+    for dic_index, dic in enumerate(dictionary_list):
         distance = levenshtein_distance(mis, dic)
-        if(distance < min):
-            min_index = index
-    result.append(min_index)
-    print(min_index)
+        result[mis_index].append([distance, dic])
+    result[mis_index].sort()
+
+return_guess = []
+total_guess_len = 0
+print(datetime.datetime.now().__str__())
+for word_index, sorted_dist_list in enumerate(result):
+    return_guess.append([])
+    for item in sorted_dist_list:
+        if item[0] == sorted_dist_list[0][0]:
+            return_guess[word_index].append(item[1])
+        else:
+            total_guess_len += len(return_guess[word_index])
+            print(return_guess[word_index])
+            break
 
 positive=0
 
-for index, res in enumerate(result):
-    if(dictionary_list[res] == correct_list[index]):
+for pos, guesses in enumerate(return_guess):
+    if(correct_list[pos] in guesses):
         positive += 1
 
-accuracy = positive/len(misspell_list)
-
-print(accuracy)
+precision = positive/total_guess_len
+recall = positive/len(correct_list)
+print("precision: ",precision)
+print("recall:",recall)
 
