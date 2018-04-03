@@ -1,6 +1,6 @@
 from jellyfish import levenshtein_distance
 import datetime
-
+start = datetime.datetime.now()
 correct_list = []
 misspell_list = []
 dictionary_list = []
@@ -29,7 +29,6 @@ for mis_index, mis in enumerate(misspell_list):
 
 return_guess = []
 total_guess_len = 0
-print(datetime.datetime.now().__str__())
 for word_index, sorted_dist_list in enumerate(result):
     return_guess.append([])
     for item in sorted_dist_list:
@@ -50,4 +49,5 @@ precision = positive/total_guess_len
 recall = positive/len(correct_list)
 print("precision: ",precision)
 print("recall:",recall)
-
+end = datetime.datetime.now()
+print(start - end)
